@@ -1,0 +1,17 @@
+.idea
+**/**/__pycache__/
+**/__pycache__/
+*/__pycache__/
+.env
+venv/
+assol.iml
+**/node_modules/
+**/npm-debug.*
+**/*.jks
+**/*.p8
+**/*.p12
+**/*.key
+**/*.mobileprovision
+**/*.orig.*
+media/
+
