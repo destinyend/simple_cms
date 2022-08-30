@@ -1,12 +1,9 @@
 import os
-
 from rest_framework.decorators import action
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
-from rest_framework_simplejwt.views import TokenObtainPairView
-from main.tasks import send_code_email
+from main.tasks import send_email
 from main.permissions import *
 from main.serializers import *
-from main.validators import UsernameValidator
 from rest_framework.mixins import *
 
 
@@ -34,10 +31,16 @@ class UsersView(GenericViewSet, UpdateModelMixin):
             status=status.HTTP_200_OK
         )
 
+    @action(['POST'], detail=False, permission_classes=(AllowAny,))
+    def send_email(self, request):
+        send_email.delay(request.data['email'], request.data['message'])
+        return Response(status=status.HTTP_200_OK)
+
 
 class BlocksView(create_view('Block')):
     @action(['PATCH'], detail=True, permission_classes=(IsActiveUser,))
     def bg_image(self, request, pk):
+        """Удаление существующего изображения, загрузка нового"""
         block = Block.objects.get(pk=pk)
         if block.bg_image:
             os.remove(block.bg_image.path)
@@ -45,16 +48,14 @@ class BlocksView(create_view('Block')):
         block.save()
         return Response({'file': block.bg_image.url}, status=status.HTTP_200_OK)
 
-# class ImagesView(create_view('Image')):
-#     def create(self, request):
-#         image = Image.objects.create(file=request.data['file'])
-#         return Response(
-#             ImageSerializer(image).data,
-#             status=status.HTTP_201_CREATED
-#         )
 
-#
-# FontsView = create_view('Font')
-# TitlesView = create_view('Text')
-# BlockTemplatesView = create_view('BlockTemplate')
-# TextTemplatesView = create_view('TextTemplate')
+#  создание админа для тестов
+try:
+    try:
+        User.objects.get(id=1)
+    except:
+        user = User.objects.create(username='admin')
+        user.set_password('admin')
+        user.save()
+except:
+    pass

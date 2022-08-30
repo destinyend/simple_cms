@@ -37,6 +37,7 @@ class User(AbstractUser):
 
 class ApiStat(Model):
     """Класс для сбора статистики по запросам в мидлваре"""
+
     class Meta:
         db_table = 'api_stat'
 
@@ -46,12 +47,26 @@ class ApiStat(Model):
 
 class Block(Model):
     class Meta:
-        ordering = ('position',)
+        ordering = ('number',)
         db_table = 'blocks'
 
-    position = SmallIntegerField(default=999)
+    class PositionChoices(TextChoices):
+        TOP = 'top'
+        BOTTOM = 'bottom'
+        LEFT = 'left'
+        RIGHT = 'right'
+
+    class DirectionChoices(TextChoices):
+        HORIZONTAL = 'horizontal'
+        VERTICAL = 'vertical'
+
+    number = SmallIntegerField(default=999)
     html = TextField(default='', blank=True)
     background = CharField(max_length=16, blank=True, default='')
     bg_image = FileField(upload_to='images', blank=True)
-    effect = CharField(max_length=32, blank=True, default='')
+    height= PositiveSmallIntegerField(default=100)
+    #  параметры эффектов
+    direction = CharField(max_length=10, default=DirectionChoices.HORIZONTAL, choices=DirectionChoices.choices)
+    position = CharField(max_length=6, default=PositionChoices.TOP, choices=PositionChoices.choices)
+    speed = PositiveSmallIntegerField(default=10)
 

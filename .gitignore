@@ -3,6 +3,7 @@
 **/__pycache__/
 */__pycache__/
 .env
+.env.prod
 venv/
 assol.iml
 **/node_modules/
@@ -14,4 +15,4 @@ assol.iml
 **/*.mobileprovision
 **/*.orig.*
 media/
-
+deploy.py

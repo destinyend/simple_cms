@@ -7,14 +7,14 @@ from simple_cms.settings import BASE_DIR, EMAIL_HOST_USER
 
 
 @app.task
-def send_code_email(email, password):
+def send_email(email, text):
     html_message = render_to_string(
         os.path.join(BASE_DIR, 'templates/email.html'),
-        {'code': password, 'valid_minutes': User.PASSWORD_VALID_MINUTES}
+        {'text': text}
     )
 
     send_mail(
-        'Ваш код доступа 2say',
+        'Что же Вы написали?',
         html_message,
         EMAIL_HOST_USER,
         [email],

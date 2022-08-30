@@ -1,10 +1,7 @@
-from django.db.models import Q
-from rest_framework import status
 from main.models import User
 from main.tests.base.base import BaseViewsTest
-from main.tests.base.decorators import active_users, banned_users, no_auth_user
-from main.tests.base.taboo_methods import TabooListMixin, TabooRetrieveMixin, TabooCreateMixin, TabooDeleteMixin, \
-    TabooNoAuthTotalMixin, TabooBannedTotalMixin
+from main.tests.base.decorators import active_users
+from main.tests.base.taboo_methods import *
 
 
 def serialize(obj, fields):
@@ -36,3 +33,5 @@ class UsersViewTest(
         self.assertEqual(response.data, expected_data)
 
 
+class Blocks(BaseViewsTest, TabooNoAuthDeleteMixin, TabooNoAuthCreateMixin, TabooNoAuthUpdateMixin):
+    pass
